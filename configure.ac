@@ -101,7 +101,18 @@ AC_ARG_WITH(default-mixerapp,
                            Default command for "Open Mixer" menu item
                            (default: "xterm -e 'alsamixer'")],
 DEFAULT_MIXERAPP=$withval)
-AC_DEFINE_UNQUOTED(DEFAULT_MIXERAPP,"${DEFAULT_MIXERAPP}",[Default mixer application])
+AC_DEFINE_UNQUOTED(DEFAULT_MIXERAPP, "${DEFAULT_MIXERAPP}", [Default mixer application])
+
+# Use system libkeybinder if requested
+AC_ARG_WITH([system-libkeybinder],
+    AS_HELP_STRING([--with-system-libkeybinder], [use system libkeybinder]))
+AM_CONDITIONAL(WITH_SYSTEM_LIBKEYBINDER, test "x${with_system_libkeybinder}" = "xyes")
+
+if test "x${with_system_libkeybinder}" = xyes; then
+PKG_CHECK_MODULES([KEYBINDER], [keybinder-3.0])
+AC_SUBST(KEYBINDER_CFLAGS)
+AC_SUBST(KEYBINDER_LIBS)
+fi
 
 AC_CONFIG_FILES(Makefile \
 		src/Makefile \

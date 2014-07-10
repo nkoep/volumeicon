@@ -1,7 +1,8 @@
 AM_CFLAGS = -Wall -DDATADIR=\"@datadir@/volumeicon\"
-AM_CFLAGS += @GTK_CFLAGS@ @ALSA_CFLAGS@ @OSS_CFLAGS@ @X11_CFLAGS@ @NOTIFY_CFLAGS@
+AM_CFLAGS += @GTK_CFLAGS@ @ALSA_CFLAGS@ @OSS_CFLAGS@ @X11_CFLAGS@ \
+			 @NOTIFY_CFLAGS@ @KEYBINDER_CFLAGS@
 
-LIBS = @GTK_LIBS@ @ALSA_LIBS@ @X11_LIBS@ @NOTIFY_LIBS@ -lm
+LIBS = @GTK_LIBS@ @ALSA_LIBS@ @X11_LIBS@ @NOTIFY_LIBS@ @KEYBINDER_LIBS@ -lm
 
 bin_PROGRAMS = volumeicon
 
@@ -11,10 +12,16 @@ else
 BACKEND = alsa_backend.c alsa_backend.h alsa_volume_mapping.h alsa_volume_mapping.c
 endif
 
+if WITH_SYSTEM_LIBKEYBINDER
+KEYBINDER =
+else
+KEYBINDER = bind.c keybinder.h
+endif
+
 volumeicon_SOURCES = \
 	volumeicon.c \
 	config.c \
 	config.h \
-	bind.c \
-	keybinder.h \
+	$(KEYBINDER) \
 	$(BACKEND)
+
